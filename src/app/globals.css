@@ -1,8 +1,20 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --neu-bg: #e8edf2;
+  --neu-bg-light: #f0f4f8;
+  --neu-shadow-light: #ffffff;
+  --neu-shadow-dark: #c8ccd0;
+  --neu-shadow: 6px 6px 12px var(--neu-shadow-dark), -6px -6px 12px var(--neu-shadow-light);
+  --neu-shadow-sm: 3px 3px 6px var(--neu-shadow-dark), -3px -3px 6px var(--neu-shadow-light);
+  --neu-shadow-inset: inset 3px 3px 6px var(--neu-shadow-dark), inset -3px -3px 6px var(--neu-shadow-light);
+  --neu-radius: 20px;
+  --neu-radius-sm: 12px;
+  --neu-radius-xs: 8px;
+
+  --background: var(--neu-bg);
+  --foreground: #2d3748;
 }
 
 @theme inline {
@@ -12,15 +24,104 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+}
+
+/* Neumorphic utility classes */
+.neu-raised {
+  background: var(--neu-bg);
+  border-radius: var(--neu-radius);
+  box-shadow: var(--neu-shadow);
+}
+
+.neu-raised-sm {
+  background: var(--neu-bg);
+  border-radius: var(--neu-radius-sm);
+  box-shadow: var(--neu-shadow-sm);
+}
+
+.neu-inset {
+  background: var(--neu-bg);
+  border-radius: var(--neu-radius-sm);
+  box-shadow: var(--neu-shadow-inset);
+}
+
+.neu-flat {
+  background: var(--neu-bg-light);
+  border-radius: var(--neu-radius-sm);
+  box-shadow: var(--neu-shadow-sm);
+}
+
+.neu-btn {
+  background: var(--neu-bg);
+  border-radius: var(--neu-radius-xs);
+  box-shadow: 3px 3px 6px var(--neu-shadow-dark), -3px -3px 6px var(--neu-shadow-light);
+  transition: all 0.15s ease;
+}
+
+.neu-btn:hover {
+  box-shadow: 2px 2px 4px var(--neu-shadow-dark), -2px -2px 4px var(--neu-shadow-light);
+}
+
+.neu-btn:active {
+  box-shadow: inset 2px 2px 4px var(--neu-shadow-dark), inset -2px -2px 4px var(--neu-shadow-light);
+}
+
+.neu-btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: var(--neu-radius-xs);
+  box-shadow: 3px 3px 6px var(--neu-shadow-dark), -3px -3px 6px var(--neu-shadow-light);
+  transition: all 0.15s ease;
+}
+
+.neu-btn-primary:hover {
+  box-shadow: 2px 2px 4px var(--neu-shadow-dark), -2px -2px 4px var(--neu-shadow-light);
+  filter: brightness(1.05);
+}
+
+.neu-btn-primary:active {
+  box-shadow: inset 2px 2px 4px rgba(0,0,0,0.2), inset -2px -2px 4px rgba(255,255,255,0.1);
+}
+
+/* Neu chip for selectable options */
+.neu-chip {
+  background: var(--neu-bg);
+  border-radius: 50px;
+  box-shadow: 2px 2px 5px var(--neu-shadow-dark), -2px -2px 5px var(--neu-shadow-light);
+  transition: all 0.15s ease;
+  cursor: pointer;
+}
+
+.neu-chip:hover {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  box-shadow: 2px 2px 5px var(--neu-shadow-dark), -2px -2px 5px var(--neu-shadow-light);
+}
+
+.neu-chip:active {
+  box-shadow: inset 2px 2px 4px var(--neu-shadow-dark), inset -2px -2px 4px var(--neu-shadow-light);
+  background: var(--neu-bg);
+  color: var(--foreground);
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--neu-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--neu-shadow-dark);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a8acaf;
 }
