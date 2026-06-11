@@ -7,10 +7,13 @@ export async function GET(request: Request) {
   const next = searchParams.get("next") ?? "/";
 
   if (code) {
-    const supabase = await createClient();
+    const safeNext = next.startsWith("/") && !next.startsWith("//") ? next : "/";
+    const redirectTo = new URL(safeNext, origin);
+    const response = NextResponse.redirect(redirectTo);
+    const supabase = await createClient(response);
     const { error } = await supabase.auth.exchangeCodeForSession(code);
     if (!error) {
-      return NextResponse.redirect(`${origin}${next}`);
+      return response;
     }
   }
 
