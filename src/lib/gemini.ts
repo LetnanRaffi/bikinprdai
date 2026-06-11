@@ -1,16 +1,28 @@
-import { GoogleGenAI } from "@google/genai";
+import { GoogleGenAI, type GenerateContentConfig } from "@google/genai";
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY! });
 
 // Models in priority order - falls back if primary is unavailable
 const MODELS = ["gemini-3.5-flash", "gemini-2.5-flash"];
 
-async function callWithFallback(params: { contents: string; config?: any }) {
+interface GeminiError {
+  status?: number | string;
+  code?: number | string;
+}
+
+function isGeminiError(err: unknown): err is GeminiError {
+  return typeof err === "object" && err !== null;
+}
+
+async function callWithFallback(params: {
+  contents: string;
+  config?: GenerateContentConfig;
+}) {
   for (const model of MODELS) {
     try {
       return await ai.models.generateContent({ model, ...params });
-    } catch (err: any) {
-      const status = err?.status || err?.code;
+    } catch (err: unknown) {
+      const status = isGeminiError(err) ? err.status || err.code : undefined;
       if (status === 503 || status === "UNAVAILABLE") {
         console.warn(`Model ${model} unavailable (503), trying fallback...`);
         continue;
@@ -65,7 +77,8 @@ Guidelines:
 - Write as if this PRD will be handed to an engineering team
 - Include realistic metrics and timelines where appropriate
 - Each section should have substantial, useful content
-- The ERD must use valid Mermaid erDiagram syntax inside a \`\`\`mermaid code block
+- The ERD must use valid Mermaid 11.15 erDiagram syntax inside a \`\`\`mermaid code block
+- Do not use \`\`\`textmermaid, version labels, spaces in ERD field types, or multi-word ERD field types. Use underscores instead, for example timestamp_with_timezone created_at.
 - Tables must use proper Markdown table syntax`;
 
 export async function generatePRD(input: PRDFormInput): Promise<string> {

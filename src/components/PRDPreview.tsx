@@ -4,6 +4,8 @@ import dynamic from "next/dynamic";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
+const mermaidLanguagePattern = /language-(?:mermaid|textmermaid)\b/;
+
 const MermaidBlock = dynamic(() => import("@/components/MermaidBlock"), {
   ssr: false,
   loading: () => (
@@ -22,8 +24,7 @@ export default function PRDPreview({ content }: PRDPreviewProps) {
         remarkPlugins={[remarkGfm]}
         components={{
           code({ className, children, ...props }) {
-            const match = /language-mermaid/.exec(className || "");
-            if (match) {
+            if (mermaidLanguagePattern.test(className || "")) {
               return <MermaidBlock chart={String(children).replace(/\n$/, "")} />;
             }
             return (
@@ -36,7 +37,7 @@ export default function PRDPreview({ content }: PRDPreviewProps) {
             const child = children as React.ReactElement<{ className?: string }>;
             if (
               child?.props?.className &&
-              /language-mermaid/.test(child.props.className)
+              mermaidLanguagePattern.test(child.props.className)
             ) {
               return <>{children}</>;
             }
